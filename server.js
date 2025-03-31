@@ -11,15 +11,14 @@ const port = process.env.PORT || 3000;
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 
+// 👉 public 폴더를 정적 파일로 제공
 app.use(cors());
 app.use(bodyParser.json());
-app.use(express.static(path.join(__dirname))); // 정적 파일 제공
-
+app.use(express.static(path.join(__dirname, "public")));  // ✅ 핵심 수정
 
 const dataFilePath = path.join(__dirname, "data.json");
 const maxValues = [100, 200, 150, 180, 250, 120, 300, 500]; // 각 단과대 최대값
 
-// 📌 JSON 파일에서 데이터 불러오기 (서버 시작 시 유지)
 function loadData() {
     try {
         if (fs.existsSync(dataFilePath)) {
@@ -29,22 +28,20 @@ function loadData() {
     } catch (err) {
         console.error("⚠ 데이터 로딩 실패:", err);
     }
-    return [0, 0, 0, 0, 0, 0, 0, 0]; // 기본값
+    return Array(maxValues.length).fill(0);
 }
 
-// 📌 JSON 파일에 데이터 저장
 function saveData(data) {
     try {
         fs.writeFileSync(dataFilePath, JSON.stringify(data, null, 2));
-        broadcastData(); // 데이터 변경 시 WebSocket으로 전송
+        broadcastData();
     } catch (err) {
         console.error("⚠ 데이터 저장 실패:", err);
     }
 }
 
-let data = loadData(); // 서버 시작 시 데이터 로드
+let data = loadData();
 
-// 📌 WebSocket을 통한 데이터 변경 감지 및 전송
 function broadcastData() {
     const percentageData = data.map((val, idx) => (val / maxValues[idx]) * 100);
     wss.clients.forEach(client => {
@@ -54,16 +51,14 @@ function broadcastData() {
     });
 }
 
-// 📌 데이터 반환 (퍼센트 변환)
 app.get("/data", (req, res) => {
     const percentageData = data.map((val, idx) => (val / maxValues[idx]) * 100);
     res.json({ data: percentageData });
 });
 
-// 📌 단일 값 업데이트 (특정 단과대 값 변경)
 app.post("/update-single", (req, res) => {
     const { index, newValue } = req.body;
-    if (index >= 0 && index < 8 && newValue >= 0) {
+    if (index >= 0 && index < maxValues.length && newValue >= 0) {
         data[index] = newValue;
         saveData(data);
         res.json({ success: true, data });
@@ -72,15 +67,15 @@ app.post("/update-single", (req, res) => {
     }
 });
 
-// 📌 정적 페이지 라우팅
+// ✅ 수정: public 폴더 기준으로 HTML 파일 라우팅
 app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "index.html"));
+    res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 app.get("/input", (req, res) => {
-    res.sendFile(path.join(__dirname, "input.html"));
+    res.sendFile(path.join(__dirname, "public", "input.html"));
 });
 
-// 📌 서버 실행
+// 서버 실행
 server.listen(port, () => {
     console.log(`✅ Server running on port ${port}`);
 });

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>단과대학별 참석율</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* 전체 스타일 */
+        body { 
+            font-family: "Arial", sans-serif;
+            text-align: center;
+            background-image: url("학총배경.png");
+            background-repeat: no-repeat;
+            background-size: cover;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1{
+          color:#FFF;
+        }
+
+        /* 네비게이션 스타일 */
+        .nav {
+            background: #000;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .nav a {
+            color: white;
+            font-size: 18px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        /* 차트 컨테이너 스타일 */
+        .charts {
+          display: grid;
+          grid-template-columns: repeat(5, 1fr); /* 그대로 유지 */
+          grid-template-rows: repeat(2, auto); /* 2행 설정 */
+          gap: 20px;
+          justify-content: center;
+          align-items: start;
+          max-width: 1800px;
+          margin: 20px auto 0;
+        }
+
+
+        /* 개별 차트 카드 스타일 */
+        .chart-card {
+          background: #F7F7F7;
+            opacity: 97%;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            max-width: 350px;
+            height: 350px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .chart-card h3 {
+            font-size: 25px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .chart-value {
+            position: absolute;
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            top: 60%;
+            transform: translateY(-30%);
+        }
+
+        canvas {
+            width: 100% !important;
+            height: auto !important;
+            max-width: 280px;
+            max-height: 280px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="nav">
+        <a href="input.html">데이터 입력하기</a>
+    </div>
+
+    <h1>단과대학별 참석율</h1>
+
+    <div class="charts">
+        <div class="chart-card"><h3>경영대학</h3><canvas id="chart1"></canvas><div class="chart-value" id="value1"></div></div>
+        <div class="chart-card"><h3>공과대학</h3><canvas id="chart2"></canvas><div class="chart-value" id="value2"></div></div>
+        <div class="chart-card"><h3>인공지능융합대학</h3><canvas id="chart3"></canvas><div class="chart-value" id="value3"></div></div>
+        <div class="chart-card"><h3>인문사회과학대학</h3><canvas id="chart4"></canvas><div class="chart-value" id="value4"></div></div>
+        <div class="chart-card">
+          <h3>참석자 이벤트<br>응모 QR</h3>
+          <img src="qr.png" alt="" width="200px">
+          <div class="chart-value"></div>
+        </div>
+        <div class="chart-card">
+          <h3>참석자 이벤트 <br> 응모 QR</h3>
+          <img src="qr.png" alt="" width="200px">
+          <div class="chart-value"></div>
+        </div>
+        <div class="chart-card"><h3>자연과학대학</h3><canvas id="chart5"></canvas><div class="chart-value" id="value5"></div></div>
+        <div class="chart-card"><h3>전자정보공과대학</h3><canvas id="chart6"></canvas><div class="chart-value" id="value6"></div></div>
+        <div class="chart-card"><h3>정책법학대학</h3><canvas id="chart7"></canvas><div class="chart-value" id="value7"></div></div>
+        <div class="chart-card"><h3>자율전공학부</h3><canvas id="chart8"></canvas><div class="chart-value" id="value8"></div></div>
+    </div>
+
+    <script>
+        let charts = [];
+        const maxValues = [100, 200, 150, 180, 250, 120, 300, 500]; // 각 단과대 최대값
+
+        // 📌 WebSocket 연결
+        let ws = new WebSocket("ws://localhost:3000");
+
+        ws.onmessage = function (event) {
+            const result = JSON.parse(event.data);
+            updateCharts(result.data);
+        };
+
+        async function fetchData() {
+            const response = await fetch("http://localhost:3000/data");
+            const result = await response.json();
+            updateCharts(result.data);
+        }
+
+        function updateCharts(data) {
+            const ctxList = Array.from({ length: 8 }, (_, i) => document.getElementById(`chart${i+1}`).getContext('2d'));
+
+            // 기존 차트가 있다면 파괴 후 다시 생성
+            charts.forEach(chart => chart.destroy());
+            charts = [];
+
+            ctxList.forEach((ctx, i) => {
+                charts.push(new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ["참가", "불참"],
+                        datasets: [{
+                            data: [data[i], 100 - data[i]],
+                            backgroundColor: ["#98c2bf", "#e0e0e0"],
+                        }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false }
+                }));
+
+                document.getElementById(`value${i+1}`).innerText = `${data[i].toFixed(2)}% \n (${Math.round((data[i] / 100) * maxValues[i])}명)`;
+            });
+        }
+
+        fetchData(); // 페이지 로드 시 데이터 가져오기
+    </script>
+</body>
+</html>
