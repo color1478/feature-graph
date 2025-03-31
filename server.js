@@ -11,7 +11,7 @@ const port = process.env.PORT || 3000;
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 
-pp.use(cors());
+app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname))); // 정적 파일 제공
 
