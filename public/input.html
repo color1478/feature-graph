@@ -79,56 +79,56 @@
     <h1>데이터 입력</h1>
     <div class="container">
         <div class="input-group">
-            <label>단과대 1</label>
+            <label>경영대학</label>
             <span class="value-display" id="display1">0</span>
             <input type="number" id="input1" value="0">
             <button onclick="adjustValue(1, 1)">+</button>
             <button onclick="adjustValue(1, -1)">-</button>
         </div>
         <div class="input-group">
-            <label>단과대 2</label>
+            <label>공과대학</label>
             <span class="value-display" id="display2">0</span>
             <input type="number" id="input2" value="0">
             <button onclick="adjustValue(2, 1)">+</button>
             <button onclick="adjustValue(2, -1)">-</button>
         </div>
         <div class="input-group">
-            <label>단과대 3</label>
+            <label>인공지능융합대학</label>
             <span class="value-display" id="display3">0</span>
             <input type="number" id="input3" value="0">
             <button onclick="adjustValue(3, 1)">+</button>
             <button onclick="adjustValue(3, -1)">-</button>
         </div>
         <div class="input-group">
-            <label>단과대 4</label>
+            <label>인문사회과학대학</label>
             <span class="value-display" id="display4">0</span>
             <input type="number" id="input4" value="0">
             <button onclick="adjustValue(4, 1)">+</button>
             <button onclick="adjustValue(4, -1)">-</button>
         </div>
         <div class="input-group">
-            <label>단과대 5</label>
+            <label>자연과학대학</label>
             <span class="value-display" id="display5">0</span>
             <input type="number" id="input5" value="0">
             <button onclick="adjustValue(5, 1)">+</button>
             <button onclick="adjustValue(5, -1)">-</button>
         </div>
         <div class="input-group">
-            <label>단과대 6</label>
+            <label>전자정보공과대학</label>
             <span class="value-display" id="display6">0</span>
             <input type="number" id="input6" value="0">
             <button onclick="adjustValue(6, 1)">+</button>
             <button onclick="adjustValue(6, -1)">-</button>
         </div>
         <div class="input-group">
-            <label>단과대 7</label>
+            <label>정책법학대학</label>
             <span class="value-display" id="display7">0</span>
             <input type="number" id="input7" value="0">
             <button onclick="adjustValue(7, 1)">+</button>
             <button onclick="adjustValue(7, -1)">-</button>
         </div>
         <div class="input-group">
-            <label>단과대 8</label>
+            <label>인재니움대학</label>
             <span class="value-display" id="display8">0</span>
             <input type="number" id="input8" value="0">
             <button onclick="adjustValue(8, 1)">+</button>
@@ -144,7 +144,7 @@
             const response = await fetch("/data");  // ✅ 상대 경로로 수정
             const result = await response.json();
     
-            const maxValues =  [1265, 660, 1466, 1265, 779, 1803, 791, 406];
+            const maxValues =  [1051, 659, 1465, 1264, 778, 1801, 791, 402];
             values = result.data.map((percent, index) => Math.round((percent / 100) * maxValues[index]));
     
             values.forEach((value, index) => {

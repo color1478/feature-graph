@@ -92,7 +92,9 @@
 </head>
 <body>
 
-    <h1>단과대학별 참석율</h1>
+    <h1>
+        단과대학별 참석율 <span id="summary" style="font-size: 30px; color: #FFD700;"></span>
+    </h1>
 
     <div class="charts">
         <div class="chart-card"><h3>경영대학</h3><canvas id="chart1"></canvas><div class="chart-value" id="value1"></div></div>
@@ -117,7 +119,7 @@
 
     <script>
         let charts = [];
-        const maxValues = [1265, 660, 1466, 1265, 779, 1803, 791, 406]; // 각 단과대 최대값
+        const maxValues = [1051, 659, 1465, 1264, 778, 1801, 791, 402]; // 각 단과대 최대값
     
         // ✅ WebSocket 연결 (Render에서 동작하도록 수정)
         let ws = new WebSocket(`wss://${location.host}`);
@@ -135,12 +137,17 @@
     
         function updateCharts(data) {
             const ctxList = Array.from({ length: 8 }, (_, i) => document.getElementById(`chart${i+1}`).getContext('2d'));
-    
+
             // 기존 차트 파괴 후 새로 그림
             charts.forEach(chart => chart.destroy());
             charts = [];
-    
+
+            let totalAttended = 0;
+
             ctxList.forEach((ctx, i) => {
+                const actualCount = Math.round((data[i] / 100) * maxValues[i]);
+                totalAttended += actualCount;
+
                 charts.push(new Chart(ctx, {
                     type: 'doughnut',
                     data: {
@@ -152,12 +159,20 @@
                     },
                     options: { responsive: true, maintainAspectRatio: false }
                 }));
-    
-                document.getElementById(`value${i+1}`).innerText = `${data[i].toFixed(2)}% \n (${Math.round((data[i] / 100) * maxValues[i])} / ${maxValues[i]})`;
+
+                document.getElementById(`value${i+1}`).innerText = `${data[i].toFixed(2)}% \n (${actualCount} / ${maxValues[i]})`;
             });
+
+            // ✅ 총 참석자 합계 표시
+            document.getElementById('summary').innerText = `- 총 참석자: ${totalAttended.toLocaleString()}명`;
         }
+
+
+        
     
         fetchData(); // 페이지 로드 시 데이터 불러오기
+
+        
     </script>
     
 </body>
