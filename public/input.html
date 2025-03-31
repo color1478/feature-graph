@@ -139,38 +139,43 @@
 
     <script>
         let values = Array(8).fill(0); // 현재 값을 저장할 배열
-
+    
         async function loadData() {
-            const response = await fetch("http://localhost:3000/data");
+            const response = await fetch("/data");  // ✅ 상대 경로로 수정
             const result = await response.json();
-
+    
             const maxValues = [100, 200, 150, 180, 250, 120, 300, 500];
             values = result.data.map((percent, index) => Math.round((percent / 100) * maxValues[index]));
-
+    
             values.forEach((value, index) => {
                 document.getElementById(`display${index + 1}`).innerText = value;
             });
         }
-
+    
         async function adjustValue(index, sign) {
-        const inputField = document.getElementById(`input${index}`);
-        const valueToAdd = Number(inputField.value);
-
-        if (isNaN(valueToAdd) || valueToAdd <= 0) return;
-
-        values[index - 1] = Math.max(0, values[index - 1] + sign * valueToAdd);
-        document.getElementById(`display${index}`).innerText = values[index - 1];
-
-        inputField.value = 0; // 입력 필드 초기화
-
-        await fetch("http://localhost:3000/update-single", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ index: index - 1, newValue: values[index - 1] })
-        });
-
-        loadData(); // 업데이트 후 값 새로고침
-    }z
+            const inputField = document.getElementById(`input${index}`);
+            const valueToAdd = Number(inputField.value);
+    
+            if (isNaN(valueToAdd) || valueToAdd <= 0) return;
+    
+            values[index - 1] = Math.max(0, values[index - 1] + sign * valueToAdd);
+            document.getElementById(`display${index}`).innerText = values[index - 1];
+    
+            inputField.value = 0; // 입력 필드 초기화
+    
+            // ✅ 상대 경로로 수정
+            await fetch("/update-single", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ index: index - 1, newValue: values[index - 1] })
+            });
+    
+            loadData(); // 업데이트 후 값 새로고침
+        }
+    
+        // ✅ 페이지 진입 시 초기 데이터 불러오기
+        loadData();
     </script>
+    
 </body>
 </html>

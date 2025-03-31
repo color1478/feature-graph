@@ -121,28 +121,28 @@
     <script>
         let charts = [];
         const maxValues = [100, 200, 150, 180, 250, 120, 300, 500]; // 각 단과대 최대값
-
-        // 📌 WebSocket 연결
-        let ws = new WebSocket("ws://localhost:3000");
-
+    
+        // ✅ WebSocket 연결 (Render에서 동작하도록 수정)
+        let ws = new WebSocket(`wss://${location.host}`);
+    
         ws.onmessage = function (event) {
             const result = JSON.parse(event.data);
             updateCharts(result.data);
         };
-
+    
         async function fetchData() {
-            const response = await fetch("http://localhost:3000/data");
+            const response = await fetch("/data"); // ✅ Render에서도 동작하는 상대 경로
             const result = await response.json();
             updateCharts(result.data);
         }
-
+    
         function updateCharts(data) {
             const ctxList = Array.from({ length: 8 }, (_, i) => document.getElementById(`chart${i+1}`).getContext('2d'));
-
-            // 기존 차트가 있다면 파괴 후 다시 생성
+    
+            // 기존 차트 파괴 후 새로 그림
             charts.forEach(chart => chart.destroy());
             charts = [];
-
+    
             ctxList.forEach((ctx, i) => {
                 charts.push(new Chart(ctx, {
                     type: 'doughnut',
@@ -155,12 +155,13 @@
                     },
                     options: { responsive: true, maintainAspectRatio: false }
                 }));
-
+    
                 document.getElementById(`value${i+1}`).innerText = `${data[i].toFixed(2)}% \n (${Math.round((data[i] / 100) * maxValues[i])}명)`;
             });
         }
-
-        fetchData(); // 페이지 로드 시 데이터 가져오기
+    
+        fetchData(); // 페이지 로드 시 데이터 불러오기
     </script>
+    
 </body>
 </html>
