@@ -14,6 +14,9 @@ const wss = new WebSocket.Server({ server });
 app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname))); // 정적 파일 제공
+// 정적 파일 서비스
+app.use(express.static(__dirname));
+
 
 const dataFilePath = path.join(__dirname, "data.json");
 const maxValues = [100, 200, 150, 180, 250, 120, 300, 500]; // 각 단과대 최대값
