@@ -7,15 +7,13 @@ const http = require("http");
 const WebSocket = require("ws");
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 
-app.use(cors());
+pp.use(cors());
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname))); // 정적 파일 제공
-// 정적 파일 서비스
-app.use(express.static(__dirname));
 
 
 const dataFilePath = path.join(__dirname, "data.json");
@@ -82,7 +80,7 @@ app.get("/input", (req, res) => {
     res.sendFile(path.join(__dirname, "input.html"));
 });
 
-// 📌 WebSocket 서버 실행
+// 📌 서버 실행
 server.listen(port, () => {
-    console.log(`✅ Server running on http://localhost:${port}`);
+    console.log(`✅ Server running on port ${port}`);
 });
