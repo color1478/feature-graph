@@ -11,14 +11,15 @@
             font-family: "Arial", sans-serif;
             text-align: center;
             background-image: url("학총배경.png");
-            background-repeat: no-repeat;
+            /*background-repeat: no-repeat;*/
             background-size: cover;
             margin: 0;
-            padding: 20px;
+            padding: 60px;
         }
 
         h1{
           color:#FFF;
+          font-size: 60px;
         }
 
         /* 네비게이션 스타일 */
@@ -66,7 +67,7 @@
         }
 
         .chart-card h3 {
-            font-size: 25px;
+            font-size: 30px;
             font-weight: bold;
             color: #333;
             margin-bottom: 10px;
@@ -91,10 +92,6 @@
 </head>
 <body>
 
-    <div class="nav">
-        <a href="input.html">데이터 입력하기</a>
-    </div>
-
     <h1>단과대학별 참석율</h1>
 
     <div class="charts">
@@ -104,12 +101,12 @@
         <div class="chart-card"><h3>인문사회과학대학</h3><canvas id="chart4"></canvas><div class="chart-value" id="value4"></div></div>
         <div class="chart-card">
           <h3>참석자 이벤트<br>응모 QR</h3>
-          <img src="qr.png" alt="" width="200px">
+          <img src="qr.png" alt="" width="250px">
           <div class="chart-value"></div>
         </div>
         <div class="chart-card">
           <h3>참석자 이벤트 <br> 응모 QR</h3>
-          <img src="qr.png" alt="" width="200px">
+          <img src="qr.png" alt="" width="250px">
           <div class="chart-value"></div>
         </div>
         <div class="chart-card"><h3>자연과학대학</h3><canvas id="chart5"></canvas><div class="chart-value" id="value5"></div></div>
