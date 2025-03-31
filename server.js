@@ -17,7 +17,7 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, "public")));  // ✅ 핵심 수정
 
 const dataFilePath = path.join(__dirname, "data.json");
-const maxValues =  [1265, 660, 1466, 1265, 779, 1803, 791, 406]; // 각 단과대 최대값
+const maxValues =  [1051, 659, 1465, 1264, 778, 1801, 791, 402]; // 각 단과대 최대값
 
 function loadData() {
     try {
