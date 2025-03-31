@@ -144,7 +144,7 @@
             const response = await fetch("/data");  // ✅ 상대 경로로 수정
             const result = await response.json();
     
-            const maxValues = [100, 200, 150, 180, 250, 120, 300, 500];
+            const maxValues =  [1265, 660, 1466, 1265, 779, 1803, 791, 406];
             values = result.data.map((percent, index) => Math.round((percent / 100) * maxValues[index]));
     
             values.forEach((value, index) => {
