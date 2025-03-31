@@ -74,7 +74,7 @@
 
         .chart-value {
             position: absolute;
-            font-size: 18px;
+            font-size: 16px;
             font-weight: bold;
             color: #333;
             top: 60%;
@@ -156,7 +156,7 @@
                     options: { responsive: true, maintainAspectRatio: false }
                 }));
     
-                document.getElementById(`value${i+1}`).innerText = `${data[i].toFixed(2)}% \n (${Math.round((data[i] / 100) * maxValues[i])}명)`;
+                document.getElementById(`value${i+1}`).innerText = `${data[i].toFixed(2)}% \n (${Math.round((data[i] / 100) * maxValues[i])} / ${maxValues[i]})`;
             });
         }
     
